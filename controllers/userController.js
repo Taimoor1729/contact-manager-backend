@@ -25,8 +25,6 @@ const registerUser = asyncHandler(async (req, res) => {
         res.status(201).json({
             _id: user.id,
             email: user.email,
-
-
         })
     } else {
         res.status(400)
@@ -44,7 +42,7 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     const user = await User.findOne({ email })
-    console.log("userinfo: ",user)
+    console.log("userinfo: ", user)
     if (!user) {
         res.status(400)
         throw new Error("User not found")
@@ -54,15 +52,15 @@ const loginUser = asyncHandler(async (req, res) => {
     const hashCompare = await bcrypt.compare(password, user.password)
     console.log(hashCompare)
 
-    if (user && hashCompare)  {
-       
+    if (user && hashCompare) {
+
         const accessToken = jwt.sign({
             user: {
                 username: user.username,
                 email: user.email,
                 id: user.id
             }
-        }, process.env.ACCESS_TOKEN || 'temitech669', { expiresIn: '1m' })
+        }, process.env.ACCESS_TOKEN || 'temitech669', { expiresIn: '15m' })
         res.status(200).json({ accessToken })
     }
     else {
@@ -72,7 +70,7 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 const currentUser = asyncHandler(async (req, res) => {
-    res.json({ message: "current user information" })
+    res.json(req.user)
 })
 
 module.exports = {
